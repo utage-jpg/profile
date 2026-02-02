@@ -1,3 +1,7 @@
+import { storage } from './storageAdapter.js';
+import { cardGenerator } from './cardGenerator.js';
+import { intimacyManager } from './intimacyManager.js';
+
 /**
  * ルーター管理
  */
@@ -9,6 +13,8 @@ class Router {
   }
 
   init() {
+    console.log('🛣️ ルーターを初期化中...');
+    
     // ルート定義
     this.routes.set('/', () => this.showPage('home'));
     this.routes.set('/create', () => this.showPage('create'));
@@ -22,11 +28,14 @@ class Router {
     
     // 初期ルート処理
     this.handleRoute();
+    console.log('✅ ルーター初期化完了');
   }
 
   handleRoute() {
     const hash = window.location.hash.slice(1) || '/';
     const [path, ...queryString] = hash.split('?');
+    
+    console.log('🔍 ルート処理:', hash);
     
     // パラメータ解析
     const params = {};
@@ -36,12 +45,14 @@ class Router {
     for (const [route, handler] of this.routes) {
       const routeParts = route.split('/');
       if (this.matchRoute(routeParts, pathParts, params)) {
+        console.log('✅ ルート一致:', route, params);
         handler(params);
         return;
       }
     }
 
     // デフォルトルート
+    console.log('🏠 デフォルトルートへ');
     this.showPage('home');
   }
 
@@ -68,6 +79,8 @@ class Router {
   }
 
   showPage(pageId) {
+    console.log('📄 ページ表示:', pageId);
+    
     // すべてのページを非表示
     document.querySelectorAll('.page').forEach(page => {
       page.classList.remove('active');
@@ -79,8 +92,15 @@ class Router {
       targetPage.classList.add('active');
       this.currentPage = pageId;
 
+      // 画面遷移時にトップへスクロール
+      window.scrollTo(0, 0);
+
       // ページ固有の初期化
       this.initPage(pageId);
+      
+      console.log('✅ ページ表示完了:', pageId);
+    } else {
+      console.error('❌ ページが見つかりません:', pageId);
     }
   }
 
@@ -326,6 +346,14 @@ class Router {
       if (!relation || !card) {
         document.getElementById('card-detail-content').innerHTML = '<p>データが見つかりません</p>';
         return;
+      }
+
+      // 訪問加点を処理
+      const intimacyUpdate = intimacyManager.updateRelationIntimacy(relation, 'visit');
+      if (intimacyUpdate.intimacyPoint > relation.intimacyPoint) {
+        await storage.updateRelation(relationId, intimacyUpdate);
+        relation.intimacyPoint = intimacyUpdate.intimacyPoint;
+        relation.intimacyLevel = intimacyUpdate.intimacyLevel;
       }
 
       this.renderCardDetail(relation, card);

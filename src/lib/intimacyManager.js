@@ -30,13 +30,14 @@ class IntimacyManager {
   }
 
   /**
-   * 時間経過によるポイント加算（7日経過で+1pt）
+   * 時間経過によるポイント加算（7日経過で+1pt、一度のみ）
    */
-  addTimePoints(relation) {
+  addTimePoints(relation, state) {
     const now = Date.now();
     const daysPassed = Math.floor((now - relation.createdAt) / (1000 * 60 * 60 * 24));
     
-    if (daysPassed >= 7) {
+    if (daysPassed >= 7 && !state['timeBonusGranted']) {
+      state['timeBonusGranted'] = true;
       return 1;
     }
     return 0;
@@ -45,12 +46,11 @@ class IntimacyManager {
   /**
    * 訪問によるポイント加算（1日1回まで）
    */
-  addVisitPoints(relation) {
+  addVisitPoints(state) {
     const today = this.getTodayString();
-    const lastVisited = relation.lastVisitedAtByDay || {};
     
-    if (!lastVisited[today]) {
-      lastVisited[today] = true;
+    if (!state[today]) {
+      state[today] = true;
       return 1;
     }
     return 0;
@@ -59,17 +59,16 @@ class IntimacyManager {
   /**
    * メモによるポイント加算（1日1回まで）
    */
-  addMemoPoints(relation, memoText) {
+  addMemoPoints(state, memoText) {
     if (!memoText || memoText.trim().length === 0) {
       return 0;
     }
 
     const today = this.getTodayString();
-    const lastVisited = relation.lastVisitedAtByDay || {};
     const memoKey = `memo_${today}`;
     
-    if (!lastVisited[memoKey]) {
-      lastVisited[memoKey] = true;
+    if (!state[memoKey]) {
+      state[memoKey] = true;
       return 2;
     }
     return 0;
@@ -80,18 +79,18 @@ class IntimacyManager {
    */
   updateRelationIntimacy(relation, action = null, memoText = null) {
     let newPoints = relation.intimacyPoint || 0;
-    const lastVisited = { ...relation.lastVisitedAtByDay };
+    const state = { ...(relation.lastVisitedAtByDay || {}) };
 
     // アクションに応じてポイント加算
     switch (action) {
       case 'visit':
-        newPoints += this.addVisitPoints(relation);
+        newPoints += this.addVisitPoints(state);
         break;
       case 'memo':
-        newPoints += this.addMemoPoints(relation, memoText);
+        newPoints += this.addMemoPoints(state, memoText);
         break;
       case 'time':
-        newPoints += this.addTimePoints(relation);
+        newPoints += this.addTimePoints(relation, state);
         break;
     }
 
@@ -101,7 +100,7 @@ class IntimacyManager {
     return {
       intimacyPoint: newPoints,
       intimacyLevel: newLevel,
-      lastVisitedAtByDay: lastVisited
+      lastVisitedAtByDay: state
     };
   }
 

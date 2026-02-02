@@ -11,11 +11,18 @@ window.intimacyManager = intimacyManager;
 
 // アプリケーション初期化
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('類型プロフィール帳を起動しました');
+  console.log('🚀 類型プロフィール帳を起動しました');
   
   // ユーザーIDの初期化
   const userId = storage.getOrCreateUserId();
-  console.log('ユーザーID:', userId);
+  console.log('👤 ユーザーID:', userId);
+  
+  // ルーター初期化確認
+  if (window.router) {
+    console.log('🛣️ ルーターが正常に初期化されました');
+  } else {
+    console.error('❌ ルーターの初期化に失敗しました');
+  }
   
   // 定期的な親密度更新チェック（時間経過分）
   checkTimeBasedIntimacy();

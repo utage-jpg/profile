@@ -46,6 +46,17 @@ body {
   color: #7f8c8d;
 }
 
+.step-indicator {
+  background: #3498db;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
 .btn-back {
   position: absolute;
   left: 0;
@@ -71,6 +82,18 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   margin: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .btn-primary {
@@ -100,6 +123,33 @@ body {
 .btn-outline:hover {
   background-color: #3498db;
   color: white;
+}
+
+/* ボタンローディング状態 */
+.btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* トップページ */
