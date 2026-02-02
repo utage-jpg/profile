@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>類型プロフィール帳</title>
+  <meta name="description" content="16タイプをベースにしたプロフィール帳を作成・交換できるサービス">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- トップページ -->
+    <div id="home" class="page active">
+      <div class="container">
+        <header class="header">
+          <h1>類型プロフィール帳</h1>
+          <p class="subtitle">自分らしさをカードにして、関係を育てよう</p>
+        </header>
+        
+        <main class="main">
+          <section class="intro">
+            <div class="intro-card">
+              <h2>📝 プロフィール帳を作る</h2>
+              <p>16タイプから自分のタイプを選んで、オリジナルのプロフィールカードを作成しましょう</p>
+            </div>
+            
+            <div class="intro-card">
+              <h2>🔄 交換して繋がる</h2>
+              <p>作成したカードを共有して、相手のプロフィール帳を受け取りましょう</p>
+            </div>
+            
+            <div class="intro-card">
+              <h2>📖 関係を育てる</h2>
+              <p>受け取ったカードにメモを残して、関係を深めていきましょう</p>
+            </div>
+          </section>
+          
+          <div class="actions">
+            <button class="btn btn-primary" onclick="router.navigate('/create')">
+              プロフィール帳を作る
+            </button>
+            <button class="btn btn-secondary" onclick="router.navigate('/my-cards')">
+              交換したカードを見る
+            </button>
+          </div>
+          
+          <div class="privacy-notice">
+            <p>⚠️ 個人情報（実名、SNS ID、連絡先など）は入力しないでください</p>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- 作成ページ -->
+    <div id="create" class="page">
+      <div class="container">
+        <header class="header">
+          <button class="btn btn-back" onclick="router.navigate('/')">← 戻る</button>
+          <h1>プロフィール帳を作成</h1>
+        </header>
+        
+        <main class="main">
+          <form id="create-form" class="create-form">
+            <div class="form-group">
+              <label for="type">タイプ</label>
+              <select id="type" name="type" required>
+                <option value="">選択してください</option>
+                <option value="INTJ">INTJ (建築家)</option>
+                <option value="INTP">INTP (論理学者)</option>
+                <option value="ENTJ">ENTJ (指揮官)</option>
+                <option value="ENTP">ENTP (討論家)</option>
+                <option value="INFJ">INFJ (提唱者)</option>
+                <option value="INFP">INFP (仲介者)</option>
+                <option value="ENFJ">ENFJ (主人公)</option>
+                <option value="ENFP">ENFP (広報担当)</option>
+                <option value="ISTJ">ISTJ (管理者)</option>
+                <option value="ISFJ">ISFJ (擁護者)</option>
+                <option value="ESTJ">ESTJ (監督官)</option>
+                <option value="ESFJ">ESFJ (領事)</option>
+                <option value="ISTP">ISTP (巨匠)</option>
+                <option value="ISFP">ISFP (冒険家)</option>
+                <option value="ESTP">ESTP (起業家)</option>
+                <option value="ESFP">ESFP (エンターテイナー)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="tagline">ひとこと（30字以内）</label>
+              <input type="text" id="tagline" name="tagline" maxlength="30" required>
+              <span class="char-count"><span id="tagline-count">0</span>/30</span>
+            </div>
+            
+            <div class="form-group">
+              <label>好きなところ</label>
+              <div class="preset-options">
+                <label><input type="checkbox" name="likes-preset" value="論理的思考"> 論理的思考</label>
+                <label><input type="checkbox" name="likes-preset" value="創造性"> 創造性</label>
+                <label><input type="checkbox" name="likes-preset" value="誠実さ"> 誠実さ</label>
+                <label><input type="checkbox" name="likes-preset" value="自由さ"> 自由さ</label>
+                <label><input type="checkbox" name="likes-preset" value="安定感"> 安定感</label>
+              </div>
+              <textarea id="likes-free" name="likes-free" placeholder="自由に記述（任意）"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label>苦手なところ</label>
+              <div class="preset-options">
+                <label><input type="checkbox" name="dislikes-preset" value="急な変更"> 急な変更</label>
+                <label><input type="checkbox" name="dislikes-preset" value="曖昧さ"> 曖昧さ</label>
+                <label><input type="checkbox" name="dislikes-preset" value="束縛"> 束縛</label>
+                <label><input type="checkbox" name="dislikes-preset" value="衝突"> 衝突</label>
+                <label><input type="checkbox" name="dislikes-preset" value="孤独"> 孤独</label>
+              </div>
+              <textarea id="dislikes-free" name="dislikes-free" placeholder="自由に記述（任意）"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label>関係で出やすい癖</label>
+              <div class="preset-options">
+                <label><input type="checkbox" name="habits" value="深く考えすぎる"> 深く考えすぎる</label>
+                <label><input type="checkbox" name="habits" value="話を聞くのが得意"> 話を聞くのが得意</label>
+                <label><input type="checkbox" name="habits" value="リードしがち"> リードしがち</label>
+                <label><input type="checkbox" name="habits" value="サポートしたくなる"> サポートしたくなる</label>
+                <label><input type="checkbox" name="habits" value="一人時間が必要"> 一人時間が必要</label>
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">次へ</button>
+            </div>
+          </form>
+        </main>
+      </div>
+    </div>
+
+    <!-- 画像生成・共有ページ -->
+    <div id="preview" class="page">
+      <div class="container">
+        <header class="header">
+          <button class="btn btn-back" onclick="router.navigate('/create')">← 戻る</button>
+          <h1>プロフィールカード</h1>
+        </header>
+        
+        <main class="main">
+          <div class="preview-section">
+            <canvas id="card-canvas" width="1080" height="1080" class="card-canvas"></canvas>
+          </div>
+          
+          <div class="actions">
+            <button class="btn btn-primary" onclick="cardGenerator.downloadImage()">
+              📥 画像を保存
+            </button>
+            <button class="btn btn-secondary" onclick="cardGenerator.copyShareText()">
+              📋 投稿文をコピー
+            </button>
+            <button class="btn btn-secondary" onclick="cardGenerator.copyShareLink()">
+              🔗 共有リンクをコピー
+            </button>
+            <button class="btn btn-outline" onclick="router.navigate('/')">
+              🏠 ホームへ
+            </button>
+          </div>
+          
+          <div class="privacy-notice">
+            <p>⚠️ 共有する前に、個人情報が含まれていないことを確認してください</p>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- 受け取りページ -->
+    <div id="share" class="page">
+      <div class="container">
+        <header class="header">
+          <button class="btn btn-back" onclick="router.navigate('/')">← 戻る</button>
+          <h1>プロフィールカード</h1>
+        </header>
+        
+        <main class="main">
+          <div id="share-content">
+            <!-- カード内容がここに表示される -->
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- マイ帳ページ -->
+    <div id="my-cards" class="page">
+      <div class="container">
+        <header class="header">
+          <button class="btn btn-back" onclick="router.navigate('/')">← 戻る</button>
+          <h1>マイ帳</h1>
+        </header>
+        
+        <main class="main">
+          <div class="filters">
+            <select id="type-filter">
+              <option value="">すべてのタイプ</option>
+            </select>
+            <select id="intimacy-filter">
+              <option value="">すべての親密度</option>
+              <option value="seed">🌱 知った</option>
+              <option value="sprout">🌿 慣れた</option>
+              <option value="tree">🌳 深まった</option>
+            </select>
+            <select id="sort-order">
+              <option value="newest">新しい順</option>
+              <option value="intimate">深まった順</option>
+            </select>
+          </div>
+          
+          <div id="cards-list" class="cards-list">
+            <!-- カード一覧がここに表示される -->
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- カード詳細ページ -->
+    <div id="card-detail" class="page">
+      <div class="container">
+        <header class="header">
+          <button class="btn btn-back" onclick="router.navigate('/my-cards')">← 戻る</button>
+          <h1>カード詳細</h1>
+        </header>
+        
+        <main class="main">
+          <div id="card-detail-content">
+            <!-- カード詳細がここに表示される -->
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
